@@ -4,6 +4,12 @@ from tkinter import messagebox
 import pymysql
 
 
+# Create the login window
+def login_window():
+    window.destroy()
+    import loginpage
+
+
 # Clear Function
 def clear():
     entry_firstname.delete(0, END)
@@ -51,12 +57,14 @@ def register():
 
                 clear()
 
+                login_window()
+
         except Exception as e:
             messagebox.showerror("Error", f"Error due to {e}")
 
 
 window = Tk()
-window.title("Registration Form")
+window.title("Registration Page")
 window.geometry("1350x710+100+50")
 window.resizable(False, False)
 
@@ -72,6 +80,7 @@ register_frame.place(x=630, y=30)
 # Add Registration Title Label
 lbl_title = Label(register_frame, text="Registration Form", font=("arial", 22, "bold"), fg="gold")
 lbl_title.place(x=20, y=30)
+
 # Add First Name Label
 lbl_firstname = Label(register_frame, text="First Name", font=("times new roman", 18, "bold"), fg="gray20")
 lbl_firstname.place(x=20, y=80)
@@ -124,7 +133,7 @@ entry_answer.place(x=370, y=355)
 lbl_password = Label(register_frame, text="Password", font=("times new roman", 18, "bold"), fg="gray20")
 lbl_password.place(x=20, y=440)
 # Entry password
-entry_password = Entry(register_frame, font=("times new roman", 18,), bg="lightgray")
+entry_password = Entry(register_frame, font=("times new roman", 18,), bg="lightgray", show="*")
 entry_password.place(x=20, y=475)
 
 # Add Confirm Password Label
@@ -132,7 +141,7 @@ lbl_confirm_password = Label(register_frame, text="Confirm Password", font=("tim
                              fg="gray20")
 lbl_confirm_password.place(x=370, y=440)
 # Entry Confirm password
-entry_confirm_password = Entry(register_frame, font=("times new roman", 18,), bg="lightgray")
+entry_confirm_password = Entry(register_frame, font=("times new roman", 18,), bg="lightgray", show="*")
 entry_confirm_password.place(x=370, y=475)
 
 # Add Check Button
@@ -148,7 +157,7 @@ btn_register.place(x=250, y=580)
 
 # Add Login Button
 login_image = PhotoImage(file="images/login.png")
-btn_login = Button(window, image=login_image, bd=0, cursor="hand2", bg="gold")
+btn_login = Button(window, image=login_image, bd=0, cursor="hand2", bg="gold", command=login_window)
 btn_login.place(x=240, y=330)
 
 entry_firstname.focus()
