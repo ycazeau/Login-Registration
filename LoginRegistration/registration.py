@@ -1,6 +1,5 @@
 from tkinter import *
-from tkinter import ttk
-from tkinter import messagebox
+from tkinter import ttk, messagebox
 import pymysql
 
 
@@ -125,7 +124,7 @@ entry_security_question.place(x=20, y=355)
 # Add Answer Label
 lbl_answer = Label(register_frame, text="Answer", font=("times new roman", 18, "bold"), fg="gray20")
 lbl_answer.place(x=370, y=320)
-# Entry Email
+# Entry Answer
 entry_answer = Entry(register_frame, font=("times new roman", 18,), bg="lightgray")
 entry_answer.place(x=370, y=355)
 

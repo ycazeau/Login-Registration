@@ -1,9 +1,82 @@
 from tkinter import *
-from tkinter import messagebox
+from tkinter import messagebox, ttk
 import pymysql
 
 
 # ###########################################
+def reset_password():
+    if entry_email.get() == "":
+        messagebox.showerror("Error", "Please fill the email address box to reset your password")
+    else:
+        try:
+            connection = pymysql.connect(host="localhost", user="root", password="3141", database="register")
+            cur = connection.cursor()
+            cur.execute("SELECT * FROM students WHERE email=%s", (entry_email.get()))
+            row = cur.fetchone()
+
+            if row is None:
+                messagebox.showerror("Error", "Invalid email")
+            else:
+                connection.close()
+
+                # Creating reset password page
+                root = Toplevel()
+                root.title("Forget Password")
+                root.geometry("470x560+400+60")
+                root.config(bg="white")
+                root.resizable(False, False)
+                root.focus_force()
+                root.grab_set()
+
+                # Title Label
+                lbl_forget = Label(root, text="Forget", font=("arial", 22, "bold"), bg="white")
+                lbl_forget.place(x=120, y=10)
+                # Title Label
+                lbl_pass = Label(root, text="Password", font=("arial", 22, "bold"), bg="white", fg="green")
+                lbl_pass.place(x=225, y=10)
+
+                # Password Image
+                password_image = PhotoImage(file="images/pass.png")
+                lbl_forget = Label(root, image=password_image, bg="white")
+                lbl_forget.place(x=170, y=70)
+
+                # Add Security Question
+                lbl_security = Label(root, text="Security Question", font=("times new roman", 18, "bold"),
+                                     bg="white")
+                lbl_security.place(x=60, y=200)
+                # Entry Security Question
+                entry_security_question = ttk.Combobox(root, font=("times new roman", 16), state="readonly", width=28)
+                entry_security_question["values"] = (
+                    "Select Question", "Your First Pet Name?", "Your Birth Place?", "Your Best Friend Name?",
+                    "Your Favorite Teacher?",
+                    "Your Favorite Hobby?")
+                entry_security_question.current(0)
+                entry_security_question.place(x=60, y=260)
+
+                # Add Answer Label
+                lbl_answer = Label(root, text="Answer", font=("times new roman", 18, "bold"), bg="white")
+                lbl_answer.place(x=60, y=310)
+                # Entry Answer
+                entry_answer = Entry(root, font=("times new roman", 18,), bg="lightgray", width=28)
+                entry_answer.place(x=60, y=350)
+
+                # New Password Label
+                lbl_new_password = Label(root, text="New Password", font=("times new roman", 18, "bold"), bg="white")
+                lbl_new_password.place(x=60, y=400)
+                # Entry New Password
+                entry_new_password = Entry(root, font=("times new roman", 18,), bg="lightgray", width=28, show="*")
+                entry_new_password.place(x=60, y=440)
+
+                # Change password button
+                btn_change_password = Button(root, text="Change Password", font=("arial", 14), bg="green", bd=0,
+                                             cursor="hand2",
+                                             activebackground="green", fg="white", activeforeground="white")
+                btn_change_password.place(x=130, y=500)
+
+                root.mainloop()
+        except Exception as e:
+            messagebox.showerror("Error", f"Error is due to {e}")
+
 
 def register_window():
     window.destroy()
@@ -17,7 +90,8 @@ def signin():
         try:
             connection = pymysql.connect(host="localhost", user="root", password="3141", database="register")
             cur = connection.cursor()
-            cur.execute("SELECT * FROM students WHERE email=%s AND password=%s", (entry_email.get(), entry_password.get()))
+            cur.execute("SELECT * FROM students WHERE email=%s AND password=%s",
+                        (entry_email.get(), entry_password.get()))
             row = cur.fetchone()
 
             if row is None:
@@ -70,7 +144,7 @@ btn_register.place(x=220, y=200)
 
 # Forget password button
 btn_forget_password = Button(login_frame, text="Forget password", font=("arial", 12), bg="white", bd=0, cursor="hand2",
-                             activebackground="white", fg="red", activeforeground="red")
+                             activebackground="white", fg="red", activeforeground="red", command=reset_password)
 btn_forget_password.place(x=410, y=200)
 
 # Login button
