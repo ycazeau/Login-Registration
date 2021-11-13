@@ -4,6 +4,7 @@ import pymysql
 
 
 # ###########################################
+
 def reset_password():
     if entry_email.get() == "":
         messagebox.showerror("Error", "Please fill the email address box to reset your password")
@@ -18,6 +19,38 @@ def reset_password():
                 messagebox.showerror("Error", "Invalid email")
             else:
                 connection.close()
+
+                # Creating new password function
+                def change_password():
+                    if entry_security_question.get() == "Select Question" or entry_answer.get() == "" or \
+                            entry_new_password.get() == "":
+                        messagebox.showerror("Error", "All fields are required")
+                    else:
+                        try:
+                            con = pymysql.connect(host="localhost", user="root", password="3141",
+                                                  database="register")
+                            cursor = con.cursor()
+                            cursor.execute("SELECT * FROM students WHERE email=%s and question=%s and answer=%s",
+                                           (entry_email.get(),
+                                            entry_security_question.get(), entry_answer.get()))
+                            row_data = cur.fetchone()
+
+                            if row_data is None:
+                                messagebox.showerror("Error", "Security Question or Answer is incorrect", parent=root)
+                            else:
+                                cur.execute("UPDATE students set password=%s WHERE email=%s", (entry_new_password.get(),
+                                                                                               entry_email.get()))
+                                connection.commit()
+                                connection.close()
+                                messagebox.showinfo("Success", "Password is reset , Please Login to with new password",
+                                                    parent=root)
+                                entry_security_question.current(0)
+                                entry_answer.delete(0, END)
+                                entry_new_password.delete(0, END)
+                                root.destroy()
+
+                        except Exception as error:
+                            messagebox.showerror("Error", f"Error is due to {error}")
 
                 # Creating reset password page
                 root = Toplevel()
@@ -70,7 +103,8 @@ def reset_password():
                 # Change password button
                 btn_change_password = Button(root, text="Change Password", font=("arial", 14), bg="green", bd=0,
                                              cursor="hand2",
-                                             activebackground="green", fg="white", activeforeground="white")
+                                             activebackground="green", fg="white", activeforeground="white",
+                                             command=change_password)
                 btn_change_password.place(x=130, y=500)
 
                 root.mainloop()
@@ -98,6 +132,8 @@ def signin():
                 messagebox.showerror("Error", "Invalid email or password")
             else:
                 messagebox.showinfo("Success", "Welcome")
+                window.destroy()
+                import welcome
                 connection.close()
         except Exception as e:
             messagebox.showerror("Error", f"Error is due to {e}")
